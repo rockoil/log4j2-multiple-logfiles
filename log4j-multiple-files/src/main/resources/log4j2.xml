@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Appenders>
+        <Console name="ConsoleAppender" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+        </Console>
+        <Routing name="RoutingAppender">
+            <Routes pattern="${ctx:logName}">
+                <Route>
+                    <RollingFile name="Rolling-${ctx:logName}" fileName="logs/${ctx:logName}" filePattern="logs/${ctx:logName}.%i.log.gz">
+                        <PatternLayout pattern="%d{yyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+                        <SizeBasedTriggeringPolicy size="512" />
+                    </RollingFile>
+                </Route>
+                <Route ref="consoleAppender" key="${ctx:logName}"/>
+            </Routes>
+        </Routing>
+    </Appenders>
+    <Loggers>
+       <Logger name="com.hakine" level="info" additivity="false">
+           <AppenderRef ref="RoutingAppender"/>
+       </Logger>
+    </Loggers>
+</Configuration>
